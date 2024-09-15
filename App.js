@@ -5,25 +5,50 @@ const App = () => {
   const [number1, setNumber1] = useState('');
   const [number2, setNumber2] = useState('');
   const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+
+  const validateInput = () => {
+    if (number1 === '' || number2 === ''){
+      setError('Please enter both numbers.');
+      return false;
+    }
+    setError('')
+    return true;
+  }
 
   const handleAddition = () => {
-    setResult(parseFloat(number1) + parseFloat(number2));
+    if (validateInput()) {
+      setResult(parseFloat(number1) + parseFloat(number2));
+    }
   };
 
   const handleSubtraction = () => {
-    setResult(parseFloat(number1) - parseFloat(number2));
+    if (validateInput()) {
+      setResult(parseFloat(number1) - parseFloat(number2));
+    }
   };
 
   const handleMultiplication = () => {
-    setResult(parseFloat(number1) * parseFloat(number2));
+    if (validateInput()) {
+      setResult(parseFloat(number1) * parseFloat(number2));
+    }
   };
 
   const handleDivision = () => {
-    if (parseFloat(number2) !== 0) {
-      setResult(parseFloat(number1) / parseFloat(number2));
-    } else {
-      setResult('Cannot divide by zero');
+    if (validateInput()) {
+      if (parseFloat(number2) !== 0) {
+        setResult(parseFloat(number1) / parseFloat(number2));
+      } else {
+        setResult('Cannot divide by zero');
+      }
     }
+  };
+
+  const handleReset = () => {
+    setNumber1('');
+    setNumber2('');
+    setResult(null);
+    setError('');
   };
 
   return (
@@ -54,6 +79,8 @@ const App = () => {
         </View>
       </View>
 
+      {error ? <Text style={styles.error}>{error}</Text>: null}
+
       <View style={styles.buttonCol}>
         <Button title="Add" onPress={handleAddition} />
       </View>
@@ -73,7 +100,7 @@ const App = () => {
       <Text style={styles.result}>Result: {result !== null && <Text style={styles.result}>{result}</Text>}</Text>
 
       <View style={styles.ClearText}>
-        <Button title='Reset'/>
+        <Button title='Reset'onPress={handleReset}/>
       </View>
     </View>
   );
@@ -127,7 +154,12 @@ const styles = StyleSheet.create({
   ClearText:{
     marginLeft: '20%',
     width: '60%',
-  }
+  },
+  error: {
+    color: 'red',
+    marginLeft: '20%',
+    marginBottom: 20,
+  },
 });
 
 export default App;
